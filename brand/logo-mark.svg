@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" fill="none">
+  <!-- знак «Ритм порядка»: линия ритма переходит в дом -->
+  <path d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="#3F5A47" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#6B8E73"/>
+</svg>

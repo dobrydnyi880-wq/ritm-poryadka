@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ритм порядка — кабинет</title>
+<style>
+  :root{
+    --bg:#f7f2ea; --card:#fffdf9; --ink:#2b2a26; --muted:#6f6a60; --line:#e6ddcf;
+    --green:#2f5d4a; --green-2:#3f7a61; --soft:#eef4ef; --red:#a4553a; --soft-red:#f6e6df; --amber:#8a6400; --soft-amber:#fff3c4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:84px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  header{background:var(--green);color:#fff;padding:16px 0 14px}
+  header h1{margin:0;font-size:20px}
+  header p{margin:2px 0 0;opacity:.8;font-size:14px}
+  h2{font-size:18px;margin:22px 0 10px}
+  .muted{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+  .row{display:flex;align-items:center;gap:10px;justify-content:space-between}
+  .tag{display:inline-block;font-size:12.5px;border-radius:99px;padding:2px 9px;background:var(--soft);color:var(--green);font-weight:600}
+  .tag.red{background:var(--soft-red);color:var(--red)} .tag.amber{background:var(--soft-amber);color:var(--amber)}
+  .tag.grey{background:#ece7de;color:var(--muted)}
+  .btn{border:0;border-radius:12px;background:var(--green);color:#fff;font:600 15px/1 inherit;font-family:inherit;padding:11px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+  .btn.ghost{background:transparent;color:var(--green);box-shadow:inset 0 0 0 1.5px var(--green)}
+  .btn.wa{background:#25d366}
+  .btn.sm{padding:8px 11px;font-size:14px;border-radius:10px}
+  .btn.full{width:100%}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+  .stat b{display:block;font-size:20px}
+  .stat span{font-size:12.5px;color:var(--muted)}
+  .day{font-weight:700;margin:18px 0 8px;font-size:15px;color:var(--green)}
+  .day.today::after{content:" · сегодня";color:var(--muted);font-weight:400}
+  .done{opacity:.6}
+  .done .name{text-decoration:line-through}
+  .name{font-weight:700}
+  nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+  nav button{flex:1;border:0;background:none;padding:10px 4px 12px;font:600 12.5px/1.2 inherit;font-family:inherit;color:var(--muted);cursor:pointer}
+  nav button svg{display:block;margin:0 auto 3px}
+  nav button[aria-current="page"]{color:var(--green)}
+  .view{display:none} .view.on{display:block}
+  dialog{border:0;border-radius:20px;padding:0;width:min(560px,94vw);max-height:92vh;background:var(--bg)}
+  dialog::backdrop{background:rgba(30,30,25,.45)}
+  dialog form{padding:18px}
+  label{display:block;font-size:13.5px;font-weight:600;margin:12px 0 4px}
+  input,select,textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:70px;resize:vertical}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .empty{text-align:center;padding:30px 16px;color:var(--muted)}
+  .seats{display:flex;gap:6px;margin-top:4px}
+  .seats i{width:18px;height:18px;border-radius:50%;border:2px solid var(--green)}
+  .seats i.on{background:var(--green)}
+  .chk{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:8px}
+  .chk input{width:auto}
+  .monthbar{display:flex;align-items:center;justify-content:space-between;margin:14px 0}
+  .gift{margin-top:8px;padding:10px 12px;border-radius:12px;background:#fde9d9;color:#8a3d12;font-size:14px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .surprise{margin-top:8px;padding:8px 12px;border-radius:12px;background:#efe7fb;color:#5b3d8f;font-size:14px}
+  .done .gift,.done .surprise{display:none}
+  .proto{background:var(--soft-amber);color:var(--amber);font-size:13px;padding:8px 16px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="proto">Прототип. Данные хранятся только в этом браузере — делайте копию во вкладке «Ещё».</div>
+<header><div class="wrap"><h1>Ритм порядка</h1><p id="hdrSub">кабинет</p></div></header>
+
+<main class="wrap">
+  <!-- РАСПИСАНИЕ -->
+  <section class="view on" id="v-plan">
+    <div class="stats" id="stats"></div>
+    <div id="plan"></div>
+  </section>
+
+  <!-- КЛИЕНТЫ -->
+  <section class="view" id="v-clients">
+    <div class="row" style="margin-top:16px">
+      <h2 style="margin:0">Клиенты</h2>
+      <button class="btn sm" id="addClient">+ Клиент</button>
+    </div>
+    <div id="clients" style="margin-top:12px"></div>
+  </section>
+
+  <!-- ДЕНЬГИ -->
+  <section class="view" id="v-money">
+    <div class="monthbar">
+      <button class="btn sm ghost" id="mPrev">←</button>
+      <h2 style="margin:0" id="mTitle"></h2>
+      <button class="btn sm ghost" id="mNext">→</button>
+    </div>
+    <div class="stats" id="mStats"></div>
+    <div id="money" style="margin-top:14px"></div>
+  </section>
+
+  <!-- ЕЩЁ -->
+  <section class="view" id="v-more">
+    <h2>Свободные места</h2>
+    <div class="card" id="seatsCard"></div>
+    <h2>Копия данных</h2>
+    <div class="card">
+      <p class="muted" style="margin:0 0 10px">Всё хранится в этом браузере. Раз в неделю скачивайте копию и отправляйте себе в WhatsApp или Telegram.</p>
+      <div class="btns">
+        <button class="btn sm" id="exportBtn">Скачать копию</button>
+        <label class="btn sm ghost" style="margin:0">Загрузить копию<input type="file" id="importFile" accept=".json" hidden></label>
+      </div>
+    </div>
+    <h2>Пример</h2>
+    <div class="card">
+      <p class="muted" style="margin:0 0 10px">Заполнить кабинет тремя вымышленными клиентами, чтобы посмотреть, как всё работает. Потом можно стереть.</p>
+      <div class="btns">
+        <button class="btn sm ghost" id="demoBtn">Заполнить примером</button>
+        <button class="btn sm ghost" id="wipeBtn" style="color:var(--red);box-shadow:inset 0 0 0 1.5px var(--red)">Стереть всё</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-v="plan" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Расписание</button>
+  <button data-v="clients"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5c1.6.7 2.7 2.6 3 5.5"/></svg>Клиенты</button>
+  <button data-v="money"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="6" width="19" height="13" rx="2"/><circle cx="12" cy="12.5" r="2.5"/><path d="M6 9.5h.01M18 15.5h.01"/></svg>Деньги</button>
+  <button data-v="more"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Ещё</button>
+</nav>
+
+<!-- ФОРМА КЛИЕНТА -->
+<dialog id="clientDlg">
+  <form method="dialog" id="clientForm">
+    <div class="row"><h2 style="margin:0" id="cfTitle">Новый клиент</h2><button class="btn sm ghost" value="cancel" formnovalidate>✕</button></div>
+    <input type="hidden" name="id">
+    <label>Имя</label><input name="name" required placeholder="Айгерим">
+    <label>WhatsApp</label><input name="phone" required inputmode="tel" placeholder="8 701 123 45 67">
+    <div class="two">
+      <div><label>Район</label><input name="district" placeholder="Сев.-Восток"></div>
+      <div><label>Адрес</label><input name="address" placeholder="ул., дом, кв."></div>
+    </div>
+    <div class="two">
+      <div><label>Формат</label>
+        <select name="plan"><option value="sub">Абонемент (раз в неделю)</option><option value="once">Разовая</option></select></div>
+      <div><label>Площадь</label>
+        <select name="area"><option value="35">до 35 м²</option><option value="50">до 50 м²</option><option value="70">до 70 м²</option><option value="more">больше</option></select></div>
+    </div>
+    <div class="two" id="subFields">
+      <div><label>День недели</label>
+        <select name="weekday"><option value="1">Понедельник</option><option value="2">Вторник</option><option value="3">Среда</option><option value="4">Четверг</option><option value="5">Пятница</option><option value="6">Суббота</option><option value="0">Воскресенье</option></select></div>
+      <div><label>Время</label><input name="time" type="time" value="10:00"></div>
+    </div>
+    <div class="two">
+      <div><label id="startLbl">Первая уборка</label><input name="start" type="date" required></div>
+      <div><label id="priceLbl">Цена за месяц, ₸</label><input name="price" type="number" min="0" step="500" required></div>
+    </div>
+    <div id="onceTime"><label>Время</label><input name="onceTime" type="time" value="10:00"></div>
+    <label>Ключи / доступ</label><input name="keys" placeholder="ключи у консьержа, код домофона…">
+    <label>Чек-лист клиента</label><textarea name="notes" placeholder="полить цветы, сложить полотенца, кот — не выпускать…"></textarea>
+    <label class="chk"><input type="checkbox" name="active" checked> Активный клиент</label>
+    <div class="btns" style="margin-top:16px">
+      <button class="btn" value="save" id="saveClient">Сохранить</button>
+      <button class="btn ghost" value="delete" id="delClient" style="color:var(--red);box-shadow:inset 0 0 0 1.5px var(--red)">Удалить</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+/* ============ НАСТРОЙКИ ============ */
+const SUB  = { "35": 20000, "50": 24000, "70": 28000 };   // абонемент, ₸ в месяц
+const ONCE = { "35": 5000,  "50": 6000,  "70": 7000  };   // разовая, ₸
+const SEATS = 3;                                          // максимум абонементов
+const BRAND = "Ритм порядка";
+// Ритм-карта: подарки за серию уборок подряд (абонемент)
+const MILESTONES = [
+  { weeks: 4,  gift: "мойка духовки внутри" },
+  { weeks: 8,  gift: "уборка балкона" },
+  { weeks: 12, gift: "мытьё окон в одной комнате" },
+  { weeks: 24, gift: "генеральная уборка кухни" },
+];
+// Тайные сюрпризы — клиенту заранее не говорим. Кабинет подсказывает примерно на каждой 3-й уборке
+const SURPRISES = [
+  "сложить полотенце лебедем или сердцем",
+  "положить ароматное саше в шкаф",
+  "оставить записку с хорошими пожеланиями",
+  "конфета на подушке",
+  "красиво сложить пледы и подушки на диване",
+  "поставить веточку или цветок в стакан на кухне",
+];
+/* =================================== */
+
+const KEY = "ritm-poryadka-v1";
+const DAYS = ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+const MONTHS = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
+const MONTHS_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+
+let db = load();
+function load(){
+  try { const d = JSON.parse(localStorage.getItem(KEY)); if (d && d.clients){ d.rewards = d.rewards || {}; return d; } } catch(e){}
+  return { clients: [], visits: {}, pay: {}, fridge: {}, rewards: {} };
+}
+let storageWarned = false;
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(db)); }
+  catch(e){
+    if (storageWarned) return; storageWarned = true;
+    const p = document.querySelector(".proto");
+    p.style.background = "#f6e6df"; p.style.color = "#a4553a";
+    p.textContent = "Этот браузер не даёт сохранять данные — после закрытия всё пропадёт. Откройте файл в Chrome или скачайте копию во вкладке «Ещё».";
+  }
+}
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = n => Math.round(n).toLocaleString("ru-RU").replace(/,/g," ") + " ₸";
+const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const ym = d => iso(d).slice(0,7);
+const uid = () => Math.random().toString(36).slice(2,9);
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+function phoneDigits(p){ let d = String(p).replace(/\D/g,""); if (d.length === 11 && d[0] === "8") d = "7" + d.slice(1); if (d.length === 10) d = "7" + d; return d; }
+const wa = (phone, text) => "https://wa.me/" + phoneDigits(phone) + "?text=" + encodeURIComponent(text);
+const plural = (n, one, few, many) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many; };
+const human = d => d.getDate() + " " + MONTHS_GEN[d.getMonth()] + ", " + DAYS[d.getDay()];
+
+/* --- уборки за период: абонементы раскладываются по дню недели, разовые — одна дата --- */
+function visitsBetween(from, to){
+  const out = [];
+  for (const c of db.clients){
+    if (!c.active) continue;
+    const start = parse(c.start);
+    if (c.plan === "sub"){
+      let d = new Date(Math.max(from, start)); d.setHours(0,0,0,0);
+      while (d.getDay() !== Number(c.weekday)) d = addDays(d, 1);
+      for (; d <= to; d = addDays(d, 7)) out.push(mk(c, d, c.time));
+    } else if (start >= from && start <= to){
+      out.push(mk(c, start, c.onceTime || c.time));
+    }
+  }
+  return out.sort((a,b) => a.date - b.date || a.time.localeCompare(b.time));
+}
+function mk(c, d, time){
+  const k = c.id + "|" + iso(d);
+  return { key: k, client: c, date: d, time: time || "10:00", status: (db.visits[k] || {}).status || "planned" };
+}
+
+/* --- РИТМ-КАРТА --- */
+// серия = сколько уборок подряд отмечено «Убрано», считая назад от сегодня.
+// Отмена обрывает серию. Неотмеченная уборка за вчера/сегодня серию не рвёт (её просто ещё не отметили).
+function streak(c){
+  if (c.plan !== "sub") return 0;
+  const t = today(), start = parse(c.start);
+  const vs = visitsBetween(start, t).filter(v => v.client.id === c.id).reverse();
+  let n = 0;
+  for (const v of vs){
+    if (v.status === "done") n++;
+    else if (v.status === "cancelled") break;
+    else if (v.date >= addDays(t, -1)) continue;
+    else break;
+  }
+  return n;
+}
+function rhythm(c){
+  const n = streak(c);
+  const due = MILESTONES.filter(m => m.weeks <= n && !db.rewards[c.id + "|" + m.weeks]);
+  const next = MILESTONES.find(m => m.weeks > n);
+  return { n, due, next, left: next ? next.weeks - n : 0 };
+}
+function hash(s){ let h = 0; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) | 0; return Math.abs(h); }
+function surpriseFor(key){ const h = hash(key); return h % 3 === 0 ? SURPRISES[h % SURPRISES.length] : null; }
+function giveReward(k){ db.rewards[k] = true; save(); renderAll(); }
+function rhythmLine(r){
+  if (r.due.length) return `🎁 ${r.n} ${plural(r.n,"неделя","недели","недель")} ритма! В следующий раз — ${r.due[0].gift} в подарок.`;
+  if (r.next) return `🔥 Ваш ритм: ${r.n} ${plural(r.n,"неделя","недели","недель")} подряд. До подарка (${r.next.gift}) — ${r.left} ${plural(r.left,"уборка","уборки","уборок")}.`;
+  return `🔥 Ваш ритм: ${r.n} ${plural(r.n,"неделя","недели","недель")} подряд. Спасибо, что вы с нами!`;
+}
+
+/* --- РАСПИСАНИЕ --- */
+let firstPlanned = {};
+function renderPlan(){
+  const t = today(), end = addDays(t, 13);
+  const list = visitsBetween(addDays(t, -1), end);
+  const month = ym(t);
+  const subs = db.clients.filter(c => c.active && c.plan === "sub");
+  const mVisits = visitsBetween(new Date(t.getFullYear(), t.getMonth(), 1), new Date(t.getFullYear(), t.getMonth()+1, 0));
+  const doneCnt = mVisits.filter(v => v.status === "done").length;
+  $("#stats").innerHTML =
+    `<div class="stat"><b>${doneCnt} / ${mVisits.filter(v=>v.status!=="cancelled").length}</b><span>уборок в ${MONTHS_GEN[t.getMonth()].replace(/я$/,"е").replace(/а$/,"е")}</span></div>
+     <div class="stat"><b>${fmt(incomeFor(month).paid)}</b><span>получено за месяц</span></div>
+     <div class="stat"><b>${Math.max(0, SEATS - subs.length)} из ${SEATS}</b><span>свободных мест</span></div>`;
+  $("#hdrSub").textContent = "сегодня " + human(t);
+
+  if (!db.clients.length){
+    $("#plan").innerHTML = `<div class="empty">Клиентов пока нет.<br><br><button class="btn" onclick="openClient()">Добавить первого клиента</button><br><br><span style="font-size:14px">или «Ещё» → «Заполнить примером»</span></div>`;
+    return;
+  }
+  // напоминание о неоплаченных абонементах
+  let html = "";
+  const unpaid = subs.filter(c => !(db.pay[c.id+"|"+month]));
+  if (unpaid.length) html += `<div class="card" style="background:var(--soft-amber);border-color:#f0dc8a;margin-top:14px">
+      <b>Не оплачен ${MONTHS[t.getMonth()]}:</b> ${unpaid.map(c=>esc(c.name)).join(", ")}</div>`;
+  const noFridge = subs.filter(c => !db.fridge[c.id+"|"+month]);
+  if (noFridge.length) html += `<div class="card" style="margin-top:${unpaid.length?0:14}px">
+      🧊 <b>Холодильник в этом месяце ещё не мыт:</b> ${noFridge.map(c=>esc(c.name)).join(", ")}</div>`;
+
+  firstPlanned = {};   // подарок показываем только на ближайшей неотмеченной уборке клиента
+  for (const v of list) if (v.status === "planned" && v.date >= t && !firstPlanned[v.client.id]) firstPlanned[v.client.id] = v.key;
+  let cur = "";
+  for (const v of list){
+    if (v.date < t && v.status !== "planned") continue;           // вчерашнее закрытое не показываем
+    const dk = iso(v.date);
+    if (dk !== cur){ cur = dk; html += `<div class="day ${dk===iso(t)?"today":""}">${v.date < t ? "Вчера, не отмечено · " : ""}${human(v.date)}</div>`; }
+    html += visitCard(v);
+  }
+  if (!list.length) html += `<div class="empty">На ближайшие 2 недели уборок нет.</div>`;
+  $("#plan").innerHTML = html;
+}
+
+function visitCard(v){
+  const c = v.client, tmr = addDays(today(), 1);
+  const remind = `Здравствуйте, ${c.name}! Напоминаю: ${iso(v.date)===iso(tmr)?"завтра":human(v.date)} в ${v.time} приеду на уборку. ${BRAND}`;
+  const r = c.plan === "sub" ? rhythm(c) : null;
+  const surprise = v.status === "planned" ? surpriseFor(v.key) : null;
+  const report = `${c.name}, уборка готова! Фото отправляю ниже. Если что-то не так — напишите в течение 24 часов, приеду и переделаю бесплатно.` +
+    (r && r.n ? "\n\n" + rhythmLine(r) : "") + `\n\n${BRAND}`;
+  const showR = r && (firstPlanned[c.id] === v.key || v.status === "done" || (v.status === "planned" && v.date < today()));
+  const rhythmHtml = !showR ? "" : `<div style="font-size:14px;margin-top:6px">🔥 Ритм: <b>${r.n}</b> ${plural(r.n,"неделя","недели","недель")}${r.next && !r.due.length ? ` · до подарка ${r.left}` : ""}</div>` +
+    (firstPlanned[c.id] !== v.key ? [] : r.due).map(m => `<div class="gift">🎁 Положен подарок за ${m.weeks} ${plural(m.weeks,"неделю","недели","недель")}: <b>${m.gift}</b>
+       <button class="btn sm" onclick="giveReward('${c.id}|${m.weeks}')">Подарок сделан</button></div>`).join("");
+  const surpriseHtml = surprise ? `<div class="surprise">✨ Тайный сюрприз сегодня: ${surprise}</div>` : "";
+  const st = v.status === "done" ? `<span class="tag">✓ убрано</span>` : v.status === "cancelled" ? `<span class="tag grey">отменено</span>` : `<span class="tag amber">${v.time}</span>`;
+  return `<div class="card ${v.status!=="planned"?"done":""}">
+    <div class="row"><span class="name">${esc(c.name)}</span>${st}</div>
+    <div class="muted" style="font-size:14px;margin-top:3px">${esc([c.district, c.address].filter(Boolean).join(", ") || "адрес не указан")} · ${c.plan==="sub"?"абонемент":"разовая"} · ${areaTxt(c.area)}</div>
+    ${c.keys ? `<div style="font-size:14px;margin-top:6px">🔑 ${esc(c.keys)}</div>` : ""}
+    ${c.notes ? `<div style="font-size:14px;margin-top:4px">📋 ${esc(c.notes)}</div>` : ""}
+    ${rhythmHtml}${surpriseHtml}
+    <div class="btns">
+      ${v.status === "planned" ? `
+        <button class="btn sm" onclick="setVisit('${v.key}','done')">Убрано</button>
+        <a class="btn sm wa" target="_blank" rel="noopener" href="${wa(c.phone, remind)}">Напомнить</a>
+        <button class="btn sm ghost" onclick="setVisit('${v.key}','cancelled')">Отмена</button>`
+      : `${v.status==="done" ? `<a class="btn sm wa" target="_blank" rel="noopener" href="${wa(c.phone, report)}">Фотоотчёт</a>` : ""}
+        <button class="btn sm ghost" onclick="setVisit('${v.key}','planned')">Вернуть</button>`}
+    </div></div>`;
+}
+const areaTxt = a => a === "more" ? "больше 70 м²" : "до " + a + " м²";
+function setVisit(k, s){ if (s === "planned") delete db.visits[k]; else db.visits[k] = { status: s }; save(); renderAll(); }
+
+/* --- КЛИЕНТЫ --- */
+function renderClients(){
+  if (!db.clients.length){ $("#clients").innerHTML = `<div class="empty">Пока пусто.</div>`; return; }
+  const sorted = [...db.clients].sort((a,b) => (b.active - a.active) || a.name.localeCompare(b.name));
+  $("#clients").innerHTML = sorted.map(c => `
+    <div class="card" style="${c.active?"":"opacity:.55"}">
+      <div class="row"><span class="name">${esc(c.name)}</span>
+        <span class="tag ${c.plan==="sub"?"":"grey"}">${c.plan==="sub" ? "абонемент · " + DAYS[c.weekday] + " " + c.time : "разовая · " + iso(parse(c.start)).split("-").reverse().join(".")}</span></div>
+      <div class="muted" style="font-size:14px;margin-top:3px">${esc(c.district || "")} ${esc(c.address || "")} · ${areaTxt(c.area)} · ${fmt(c.price)}${c.plan==="sub"?" в месяц":""}</div>
+      ${c.plan === "sub" && c.active ? (() => { const r = rhythm(c); return `<div style="font-size:14px;margin-top:6px">🔥 Ритм: <b>${r.n}</b> ${plural(r.n,"неделя","недели","недель")}${r.next ? ` · следующий подарок через ${r.left}: ${r.next.gift}` : ""}${r.due.length ? ` · <b style="color:#8a3d12">🎁 положен подарок</b>` : ""}</div>`; })() : ""}
+      <div class="btns">
+        <a class="btn sm wa" target="_blank" rel="noopener" href="${wa(c.phone, "Здравствуйте, " + c.name + "!")}">WhatsApp</a>
+        <button class="btn sm ghost" onclick="openClient('${c.id}')">Изменить</button>
+      </div></div>`).join("");
+}
+
+function openClient(id){
+  const f = $("#clientForm"); f.reset();
+  const c = db.clients.find(x => x.id === id);
+  $("#cfTitle").textContent = c ? c.name : "Новый клиент";
+  $("#delClient").style.display = c ? "" : "none";
+  const v = c || { id: "", plan: "sub", area: "35", weekday: String((today().getDay()+1)%7), time: "10:00", start: iso(addDays(today(),1)), price: SUB["35"], active: true };
+  for (const [k, val] of Object.entries(v)){
+    const el = f.elements[k]; if (!el) continue;
+    if (el.type === "checkbox") el.checked = !!val; else el.value = val;
+  }
+  syncForm(false);
+  $("#clientDlg").showModal();
+}
+function syncForm(recalc = true){
+  const f = $("#clientForm"), sub = f.plan.value === "sub";
+  $("#subFields").style.display = sub ? "" : "none";
+  $("#onceTime").style.display = sub ? "none" : "";
+  $("#startLbl").textContent = sub ? "Начало абонемента" : "Дата уборки";
+  $("#priceLbl").textContent = sub ? "Цена за месяц, ₸" : "Цена уборки, ₸";
+  if (recalc && f.area.value !== "more") f.price.value = (sub ? SUB : ONCE)[f.area.value];
+}
+$("#clientForm").plan.addEventListener("change", () => syncForm());
+$("#clientForm").area.addEventListener("change", () => syncForm());
+$("#clientForm").start.addEventListener("change", e => {   // абонемент: день недели = день первой уборки
+  const f = $("#clientForm"); if (f.plan.value === "sub" && e.target.value) f.weekday.value = String(parse(e.target.value).getDay());
+});
+
+$("#clientDlg").addEventListener("close", () => {
+  const dlg = $("#clientDlg"), f = $("#clientForm"), act = dlg.returnValue;
+  if (act === "delete"){
+    if (confirm("Удалить клиента и его отметки? Это нельзя отменить.")){
+      const id = f.id.value;
+      db.clients = db.clients.filter(c => c.id !== id);
+      for (const store of [db.visits, db.pay, db.fridge, db.rewards]) for (const k of Object.keys(store)) if (k.startsWith(id + "|")) delete store[k];
+      save(); renderAll();
+    }
+  } else if (act === "save"){
+    const data = Object.fromEntries(new FormData(f));
+    data.active = f.active.checked;
+    data.price = Number(data.price) || 0;
+    if (data.plan === "sub") data.weekday = String(data.weekday);
+    if (data.plan === "sub" && data.active && !f.id.value){
+      const subs = db.clients.filter(c => c.active && c.plan === "sub").length;
+      if (subs >= SEATS && !confirm(`Уже ${subs} абонемента из ${SEATS}. Всё равно добавить?`)) return;
+    }
+    if (f.id.value){ Object.assign(db.clients.find(c => c.id === f.id.value), data); }
+    else { data.id = uid(); db.clients.push(data); }
+    save(); renderAll();
+  }
+  dlg.returnValue = "";
+});
+// кнопка «Сохранить» должна проверять обязательные поля
+$("#saveClient").addEventListener("click", e => { if (!$("#clientForm").checkValidity()){ e.preventDefault(); $("#clientForm").reportValidity(); } });
+
+/* --- ДЕНЬГИ --- */
+let mCursor = new Date(today().getFullYear(), today().getMonth(), 1);
+function incomeFor(month){
+  const [y, m] = month.split("-").map(Number);
+  const from = new Date(y, m-1, 1), to = new Date(y, m, 0);
+  let expected = 0, paid = 0;
+  for (const c of db.clients.filter(c => c.active)){
+    if (c.plan === "sub"){ if (parse(c.start) <= to){ expected += c.price; if (db.pay[c.id+"|"+month]) paid += c.price; } }
+    else if (parse(c.start) >= from && parse(c.start) <= to){ expected += c.price; if (db.pay[c.id+"|"+month]) paid += c.price; }
+  }
+  return { expected, paid };
+}
+function renderMoney(){
+  const month = ym(mCursor), y = mCursor.getFullYear(), m = mCursor.getMonth();
+  $("#mTitle").textContent = MONTHS[m][0].toUpperCase() + MONTHS[m].slice(1) + " " + y;
+  const inc = incomeFor(month);
+  const vs = visitsBetween(new Date(y, m, 1), new Date(y, m+1, 0)).filter(v => v.status !== "cancelled");
+  $("#mStats").innerHTML =
+    `<div class="stat"><b>${fmt(inc.paid)}</b><span>получено</span></div>
+     <div class="stat"><b>${fmt(inc.expected - inc.paid)}</b><span>ждём оплату</span></div>
+     <div class="stat"><b>${vs.length}</b><span>уборок по плану</span></div>`;
+  const rows = db.clients.filter(c => c.active && (c.plan === "sub" ? parse(c.start) <= new Date(y, m+1, 0) : ym(parse(c.start)) === month));
+  if (!rows.length){ $("#money").innerHTML = `<div class="empty">В этом месяце клиентов нет.</div>`; return; }
+  $("#money").innerHTML = rows.map(c => {
+    const k = c.id + "|" + month, paidOk = !!db.pay[k], fr = !!db.fridge[k];
+    const cnt = vs.filter(v => v.client.id === c.id).length;
+    const bill = `Здравствуйте, ${c.name}! ${c.plan==="sub" ? "Абонемент на " + MONTHS[m] + ": " + cnt + " " + plural(cnt, "уборка", "уборки", "уборок") : "Уборка " + human(parse(c.start))} — ${fmt(c.price)}. Оплата переводом на Kaspi. Спасибо! ${BRAND}`;
+    return `<div class="card">
+      <div class="row"><span class="name">${esc(c.name)}</span><span class="tag ${paidOk?"":"red"}">${paidOk ? "оплачено" : "не оплачено"}</span></div>
+      <div class="muted" style="font-size:14px;margin-top:3px">${fmt(c.price)} · ${c.plan==="sub" ? cnt + " " + plural(cnt, "уборка", "уборки", "уборок") + " в месяце" : "разовая"}</div>
+      <label class="chk"><input type="checkbox" ${paidOk?"checked":""} onchange="toggle('pay','${k}',this.checked)"> Оплата получена</label>
+      ${c.plan==="sub" ? `<label class="chk"><input type="checkbox" ${fr?"checked":""} onchange="toggle('fridge','${k}',this.checked)"> 🧊 Холодильник внутри помыт (бонус)</label>` : ""}
+      ${paidOk ? "" : `<div class="btns"><a class="btn sm wa" target="_blank" rel="noopener" href="${wa(c.phone, bill)}">Напомнить об оплате</a></div>`}
+    </div>`;
+  }).join("");
+}
+function toggle(store, k, on){ if (on) db[store][k] = true; else delete db[store][k]; save(); renderAll(); }
+$("#mPrev").onclick = () => { mCursor = new Date(mCursor.getFullYear(), mCursor.getMonth()-1, 1); renderMoney(); };
+$("#mNext").onclick = () => { mCursor = new Date(mCursor.getFullYear(), mCursor.getMonth()+1, 1); renderMoney(); };
+
+/* --- ЕЩЁ --- */
+function renderMore(){
+  const subs = db.clients.filter(c => c.active && c.plan === "sub");
+  $("#seatsCard").innerHTML = `<div class="row"><div><b>${subs.length} из ${SEATS}</b> абонементов занято<div class="seats">${Array.from({length:SEATS},(_,i)=>`<i class="${i<subs.length?"on":""}"></i>`).join("")}</div></div>
+    <span class="muted" style="font-size:14px;text-align:right">${subs.length>=SEATS ? "Мест нет — на сайте<br>«запись в лист ожидания»" : "На сайте: «Свободно<br>мест: " + (SEATS-subs.length) + " из " + SEATS + "»"}</span></div>`;
+}
+$("#exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ritm-poryadka-" + iso(today()) + ".json"; a.click();
+};
+$("#importFile").onchange = async e => {
+  const file = e.target.files[0]; if (!file) return;
+  try { const d = JSON.parse(await file.text()); if (!d.clients) throw new Error("не тот файл");
+    if (confirm("Заменить текущие данные копией из файла?")){ db = d; save(); renderAll(); } }
+  catch(err){ alert("Не получилось прочитать копию: " + err.message); }
+  e.target.value = "";
+};
+$("#demoBtn").onclick = () => {
+  if (db.clients.length && !confirm("В кабинете уже есть клиенты. Добавить к ним примеры?")) return;
+  const t = today(), next = wd => { let d = addDays(t, 0); while (d.getDay() !== wd) d = addDays(d, 1); return d; };
+  const demo = [
+    { name:"Пример: Айгерим", phone:"87010000001", district:"Центр", address:"ул. Торайгырова 1, кв. 5", plan:"sub", area:"50", weekday:"2", time:"10:00", start: iso(addDays(next(2), -28)), price: SUB["50"], keys:"ключи у консьержа", notes:"полить цветы, кот не выпускать", active:true },
+    { name:"Пример: Ольга", phone:"87010000002", district:"Усолка", address:"ул. Кутузова 10, кв. 12", plan:"sub", area:"35", weekday:"5", time:"14:00", start: iso(addDays(next(5), -14)), price: SUB["35"], keys:"", notes:"сложить полотенца", active:true },
+    { name:"Пример: Марат", phone:"87010000003", district:"Сев.-Восток", address:"ул. Ломова 20, кв. 3", plan:"once", area:"70", weekday:"0", time:"10:00", onceTime:"11:00", start: iso(addDays(t, 3)), price: ONCE["70"], keys:"", notes:"после квартирантов", active:true },
+  ].map(c => ({ ...c, id: uid() }));
+  db.clients.push(...demo);
+  db.pay[demo[0].id + "|" + ym(t)] = true;
+  // прошлые уборки примеров — отмечены «Убрано», чтобы было видно ритм
+  for (const v of visitsBetween(addDays(t, -60), addDays(t, -2))) if (demo.some(d => d.id === v.client.id)) db.visits[v.key] = { status: "done" };
+  save(); renderAll(); go("plan");
+};
+$("#wipeBtn").onclick = () => {
+  if (confirm("Стереть всех клиентов и отметки? Сначала скачайте копию — иначе восстановить будет нельзя.")){
+    db = { clients: [], visits: {}, pay: {}, fridge: {}, rewards: {} }; save(); renderAll();
+  }
+};
+
+/* --- навигация --- */
+function go(v){
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  document.querySelectorAll("nav button").forEach(b => b.dataset.v === v ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"));
+  scrollTo(0, 0);
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => go(b.dataset.v));
+$("#addClient").onclick = () => openClient();
+
+function renderAll(){ renderPlan(); renderClients(); renderMoney(); renderMore(); }
+renderAll();
+</script>
+</body>
+</html>

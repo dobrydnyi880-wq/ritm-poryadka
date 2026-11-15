@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ритм порядка — уборка квартир в Павлодаре</title>
+<meta name="description" content="Уборка квартир в Павлодаре раз в неделю. Абонемент: 4 уборки в месяц от 20 000 ₸, гарантия переделки 24 часа.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== БРЕНД «Ритм порядка» — палитра шалфей + лён ===== */
+  :root{
+    --sage:#6B8E73; --soft:#A4B59A; --light:#C7D3C1; --mist:#E6E9DD; --linen:#DAD2C1;
+    --deep:#3F5A47; --deep-2:#34503D; --ink:#26332A; --muted:#5F6B61; --dmuted:#C7D3C1;
+    --card:#FBFBF6; --line:#D9DDCF; --dline:rgba(230,233,221,.18);
+    --todo:#fff3b0; --todo-ink:#7a5b00; --r:18px;
+    --shadow:0 10px 30px rgba(63,90,71,.12);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--mist);color:var(--ink);font:16.5px/1.55 Manrope,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+  h1,h2,h3{line-height:1.12;margin:0 0 .5em;font-weight:800;letter-spacing:-.02em;color:var(--deep)}
+  h1{font-size:clamp(32px,5.2vw,54px)}
+  h2{font-size:clamp(26px,3.8vw,38px);text-align:center;margin-bottom:28px}
+  h3{font-size:18px}
+  section{padding:76px 0}
+  .dark{background:var(--deep);color:#fff}
+  .dark h1,.dark h2,.dark h3{color:#fff}
+  .greyb{background:var(--linen)}
+  .whiteb{background:var(--card)}
+  .acc-t{color:var(--sage)} .dark .acc-t{color:var(--light)}
+  .muted{color:var(--muted)} .dark .muted{color:var(--dmuted)}
+
+  .proto{background:var(--deep);color:var(--mist);font-size:13.5px;text-align:center;padding:7px 16px;font-weight:500}
+  .proto button{margin-left:6px;background:var(--mist);color:var(--deep);border:0;border-radius:99px;padding:2px 10px;font:inherit;cursor:pointer}
+  .todo{background:var(--todo);color:var(--todo-ink);border-radius:6px;padding:1px 6px;font-size:.84em;font-weight:600}
+  body.clean .todo{display:none}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--deep);color:#fff;border:0;border-radius:99px;
+    padding:17px 30px;font:700 16px/1 Manrope,inherit;text-decoration:none;cursor:pointer;box-shadow:0 8px 22px rgba(63,90,71,.28);transition:transform .15s,background .15s}
+  .btn:hover{background:var(--deep-2);transform:translateY(-1px)}
+  .btn.sm{padding:11px 18px;font-size:14.5px;box-shadow:none}
+  .dark .btn,.hero .btn,.btn.on-dark{background:var(--mist);color:var(--deep);box-shadow:0 8px 22px rgba(0,0,0,.18)}
+  .dark .btn:hover,.hero .btn:hover{background:#fff}
+
+  .ph{background:var(--soft) center/cover no-repeat;position:relative}
+  .ph[data-need]::after{content:"фото: " attr(data-need);position:absolute;right:10px;bottom:10px;background:var(--todo);color:var(--todo-ink);
+    font-size:12px;border-radius:6px;padding:2px 7px;font-weight:600}
+  body.clean .ph[data-need]::after{display:none}
+
+  /* ===== ШАПКА ===== */
+  header{position:sticky;top:10px;z-index:20;margin-bottom:-76px}
+  header .bar-in{max-width:1040px;margin:0 auto;padding:0 16px}
+  header nav{background:rgba(251,251,246,.95);backdrop-filter:blur(10px);border-radius:99px;height:66px;display:flex;align-items:center;
+    justify-content:space-between;gap:16px;padding:0 10px 0 20px;box-shadow:var(--shadow)}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--deep)}
+  .logo svg{width:52px;height:39px;flex:none}
+  .logo b{display:block;font-weight:800;font-size:16px;line-height:1.02;letter-spacing:-.01em}
+  .logo b span{display:block;color:var(--sage)}
+  .links{display:flex;gap:24px;font-size:14.5px;font-weight:600}
+  .links a{color:var(--deep);text-decoration:none} .links a:hover{color:var(--sage)}
+
+  /* ===== 1. ГЕРОЙ ===== */
+  .hero{position:relative;min-height:min(760px,100svh);display:flex;align-items:center;padding:130px 0 76px;color:#fff;
+    background:var(--deep) url(img/hero.jpg) 70% center/cover no-repeat}
+  .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(38,51,42,.94) 0%,rgba(52,80,61,.78) 45%,rgba(63,90,71,.15) 85%)}
+  .hero .wrap{position:relative;width:100%}
+  .hero-in{max-width:570px}
+  .hero h1{color:#fff}
+  .quote-hook{margin:0 0 20px;padding:11px 16px;border-left:3px solid var(--light);background:rgba(230,233,221,.1);border-radius:0 14px 14px 0;font-size:15.5px;font-style:italic}
+  .src{display:block;font-size:12px;opacity:.7;margin-top:3px;font-style:normal}
+  .hero ul{list-style:none;padding:0;margin:0 0 30px;font-size:16.5px}
+  .hero li{padding:4px 0 4px 22px;position:relative}
+  .hero li::before{content:"";position:absolute;left:0;top:11px;width:10px;height:10px;border-radius:50%;background:var(--light)}
+  .hero .hint{margin-top:14px;font-size:13.5px;opacity:.75}
+  .hero-tag{position:absolute;right:16px;bottom:18px}
+
+  /* ===== 2. БОЛИ ===== */
+  .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .pain{background:var(--card);border-radius:var(--r);padding:24px 22px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+  .pain q{font-size:17px;font-weight:600;quotes:"«" "»";line-height:1.35;color:var(--ink)}
+  .pain .src{opacity:1;color:var(--muted)}
+  .pain p{margin:auto 0 0;padding-top:14px;border-top:1px solid var(--line);font-weight:700;display:flex;gap:10px;align-items:flex-start;color:var(--deep)}
+  .chk{flex:none;width:22px;height:22px;border-radius:50%;background:var(--sage);display:grid;place-items:center}
+  .chk::before{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+  .dark .chk{background:var(--light)} .dark .chk::before{border-color:var(--deep)}
+
+  /* ===== 3. КАЛЬКУЛЯТОР ===== */
+  .calc{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  .panel{background:rgba(230,233,221,.07);border:1px solid var(--dline);border-radius:var(--r);padding:24px}
+  .lbl{display:block;font-weight:600;font-size:14px;margin:0 0 8px;color:var(--dmuted)}
+  .seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+  .seg:last-child{margin-bottom:0}
+  .seg button{flex:1;min-width:64px;border:1.5px solid var(--dline);background:transparent;border-radius:12px;padding:11px 6px;
+    font:600 15px/1.2 Manrope,inherit;cursor:pointer;color:#fff;transition:all .15s}
+  .seg button:hover{border-color:var(--soft)}
+  .seg button small{display:block;font-weight:500;color:var(--dmuted);font-size:12px;margin-top:3px}
+  .seg button[aria-pressed="true"]{border-color:var(--mist);background:var(--mist);color:var(--deep)}
+  .seg button[aria-pressed="true"] small{color:var(--sage)}
+  .seg.days button{min-width:40px;flex:1 0 11%}
+  .price{background:var(--mist);color:var(--ink);border-radius:var(--r);display:flex;flex-direction:column;justify-content:space-between;gap:18px;padding:26px}
+  .price .lab{color:var(--muted);font-size:15px;font-weight:600}
+  .price .old{color:var(--muted);text-decoration:line-through;font-size:14.5px;margin-top:6px}
+  .price .big{font-size:clamp(40px,6vw,54px);font-weight:800;line-height:1.05;margin:4px 0 8px;color:var(--deep);letter-spacing:-.02em}
+  .price .per{font-size:15px}
+  .price ul{list-style:none;margin:12px 0 0;padding:0;font-size:14.5px}
+  .price ul li{padding:7px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+  .price ul li::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+  .price .hourline{margin-top:14px;font-size:14px;background:var(--light);border-radius:12px;padding:10px 12px;color:var(--deep);font-weight:600}
+  .price .btn{width:100%;background:var(--deep);color:#fff}
+  .price .note{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center}
+  .calc-foot{font-size:13.5px;margin:16px 2px 0;text-align:center}
+
+  /* ===== ВЕСЬ ПРАЙС ===== */
+  .plist{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .pcard{background:var(--card);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+  .pcard h3{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .pcard h3 i{font-style:normal;font-size:11.5px;font-weight:700;background:var(--light);color:var(--deep);border-radius:99px;padding:3px 9px;letter-spacing:.02em}
+  .pcard .sub{color:var(--muted);font-size:14px;margin:0 0 10px}
+  .prow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:15.5px}
+  .prow:last-child{border-bottom:0}
+  .prow b{white-space:nowrap;color:var(--deep);font-weight:800}
+  .pcard.hl{background:var(--deep);color:#fff}
+  .pcard.hl h3{color:#fff} .pcard.hl .sub{color:var(--dmuted)} .pcard.hl .prow{border-color:var(--dline)} .pcard.hl .prow b{color:#fff}
+  .pcard.hl h3 i{background:var(--mist)}
+  .pcard.wide{grid-column:1/-1}
+  .pcard.wide .cols{display:grid;grid-template-columns:1fr 1fr;column-gap:32px}
+  .plist-foot{text-align:center;font-size:13.5px;margin:18px auto 0;max-width:44em}
+
+  /* ===== 4. ЧТО ВЫ ПОЛУЧАЕТЕ ===== */
+  .get{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;border-radius:24px;overflow:hidden;background:var(--light)}
+  .get .ph{min-height:440px;background-image:url(img/work.jpg)}
+  .cards{padding:22px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+  .fcard{background:var(--card);border-radius:16px;padding:14px 16px;display:flex;gap:14px;align-items:center}
+  .ic{flex:none;width:46px;height:46px;border-radius:50%;background:var(--mist);display:grid;place-items:center;color:var(--deep)}
+  .ic svg{width:22px;height:22px}
+  .fcard b{display:block;font-size:15.5px;margin-bottom:2px;color:var(--deep)}
+  .fcard span{font-size:14px;color:var(--muted)}
+
+  .rhythm{margin-top:18px;background:var(--deep);color:#fff;border-radius:24px;padding:30px;display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:center}
+  .rhythm h3{font-size:26px;color:#fff}
+  .rhythm p{color:var(--dmuted);margin:0 0 14px}
+  .track{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .track li{background:rgba(230,233,221,.08);border:1px solid var(--dline);border-radius:14px;padding:14px 12px;font-size:14px;line-height:1.3}
+  .track b{display:block;font-size:30px;font-weight:800;color:var(--light);line-height:1;margin-bottom:6px}
+  .track small{display:block;color:var(--dmuted);font-size:12px;margin-top:4px}
+  .rnote{font-size:14px;background:rgba(199,211,193,.14);border-radius:12px;padding:10px 12px;color:#fff}
+
+  /* ===== ДО / ПОСЛЕ ===== */
+  .ba-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+  .ba-tabs button{border:1.5px solid var(--soft);background:transparent;color:var(--deep);border-radius:99px;padding:9px 16px;font:600 14.5px Manrope,inherit;cursor:pointer}
+  .ba-tabs button[aria-pressed="true"]{background:var(--deep);border-color:var(--deep);color:#fff}
+  .ba{max-width:620px;margin:0 auto}
+  .cmp{position:relative;border-radius:20px;overflow:hidden;user-select:none;background:var(--soft);touch-action:pan-y;box-shadow:var(--shadow)}
+  .cmp img{display:block;width:100%;height:auto}
+  .cmp .before{position:absolute;inset:0;overflow:hidden;width:50%}
+  .cmp .before img{height:auto;max-width:none}
+  .cmp .line{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--mist);transform:translateX(-50%);pointer-events:none}
+  .cmp .knob{position:absolute;top:50%;left:50%;width:46px;height:46px;border-radius:50%;background:var(--mist);transform:translate(-50%,-50%);
+    display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;color:var(--deep);font-weight:800}
+  .cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+  .tag{position:absolute;top:12px;background:rgba(251,251,246,.92);color:var(--deep);font-size:13px;font-weight:700;border-radius:99px;padding:4px 12px;pointer-events:none}
+  .tag.l{left:12px} .tag.r{right:12px}
+  .ba-note{text-align:center;font-size:13.5px;margin:14px auto 0;max-width:40em}
+
+  /* ===== 5. ДОВЕРИЕ ===== */
+  .trust{position:relative;overflow:hidden}
+  .trust .ph{position:absolute;top:0;right:0;bottom:0;width:50%;background-color:var(--sage);background-image:url(img/me.jpg)}
+  .trust .ph::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--deep) 0%,rgba(63,90,71,.35) 40%,rgba(63,90,71,0) 75%)}
+  .trust .wrap{position:relative}
+  .trust-in{max-width:560px}
+  .trust h2{text-align:left}
+  .ticks{list-style:none;padding:0;margin:22px 0}
+  .ticks li{display:flex;gap:12px;padding:8px 0}
+  .ticks b{display:block}
+  .ticks span{color:var(--dmuted);font-size:14.5px}
+  .guarantee{display:flex;gap:14px;align-items:center;border-radius:var(--r);padding:16px;background:var(--mist);color:var(--ink)}
+  .guarantee .ic{width:52px;height:52px;background:var(--deep);color:#fff}
+  .guarantee .acc-t{color:var(--deep)}
+  .vs{width:100%;border-collapse:collapse;margin-top:22px;font-size:14.5px}
+  .vs th,.vs td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--dline)}
+  .vs th{font-size:12.5px;color:var(--dmuted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .vs td:first-child{color:var(--dmuted)}
+  .vs td:last-child{color:var(--light);font-weight:700}
+  .rqs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+  .rq{background:rgba(230,233,221,.08);border:1px solid var(--dline);border-radius:14px;padding:14px;font-size:14.5px}
+  .rq q{quotes:"«" "»"}
+  .rq-note{font-size:13px;margin:20px 0 0}
+
+  /* ===== ШАГИ ===== */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .step{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+  .step i{font-style:normal;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--light);color:var(--deep);font-size:16px;font-weight:800;margin-bottom:12px}
+  .step b{display:block;font-size:17px;margin-bottom:4px;color:var(--deep)}
+  .step span{color:var(--muted);font-size:15px}
+
+  /* ===== аккордеоны ===== */
+  .narrow{max-width:780px;margin:0 auto}
+  details.acc{background:var(--card);border-radius:16px;margin-bottom:10px;box-shadow:0 2px 12px rgba(63,90,71,.06)}
+  details.acc summary{cursor:pointer;list-style:none;padding:18px 20px;display:flex;align-items:center;gap:12px;font-weight:700;color:var(--ink)}
+  details.acc summary::-webkit-details-marker{display:none}
+  details.acc summary em{font-style:normal;font-weight:500;color:var(--muted);font-size:14px;margin-left:auto;text-align:right}
+  details.acc summary::after{content:"+";flex:none;width:26px;height:26px;border-radius:50%;background:var(--mist);color:var(--deep);
+    display:grid;place-items:center;font-size:18px;line-height:1;font-weight:600;transition:transform .2s,background .2s}
+  details.acc summary:not(:has(em))::after{margin-left:auto}
+  details.acc[open] summary::after{transform:rotate(45deg);background:var(--light)}
+  details.acc ul{margin:0;padding:0 20px 16px 40px;font-size:15px;color:#3a463d}
+  details.acc p{margin:0;padding:0 20px 18px;color:#3a463d;font-size:15px}
+  details.acc.no summary{color:#8a5a3c}
+
+  /* ===== ФИНАЛ ===== */
+  .final{position:relative;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 92% 18%,rgba(199,211,193,.22) 0 120px,transparent 121px),radial-gradient(circle at 78% 110%,rgba(164,181,154,.25) 0 200px,transparent 201px),var(--deep);padding:48px 34px;color:#fff}
+  .final::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(52,80,61,.97) 0%,rgba(63,90,71,.88) 50%,rgba(63,90,71,.3))}
+  .final>*{position:relative}
+  .final h2{text-align:left;margin-bottom:10px;color:#fff}
+  .final .acc-t{color:var(--light)}
+  .final p{color:var(--dmuted);max-width:30em;margin:0 0 16px}
+  .seats{display:flex;gap:10px;margin:6px 0 8px}
+  .seats i{width:34px;height:34px;border-radius:50%;border:2px solid var(--light);display:block}
+  .seats i.on{background:var(--light)}
+  .final .deadline{color:#fff;font-weight:700;margin-bottom:22px}
+  .final .btn{background:var(--mist);color:var(--deep)}
+
+  footer{background:var(--deep);color:var(--dmuted);padding:30px 0 40px;font-size:14px;text-align:center}
+  footer .logo{justify-content:center;color:#fff;margin-bottom:8px}
+  footer .logo b span{color:var(--light)}
+
+  .mbar{display:none}
+  @media (max-width:860px){
+    section{padding:54px 0}
+    .links{display:none}
+    header nav .btn{display:none}
+    header nav{height:58px;padding-left:14px}
+    header{margin-bottom:-68px}
+    .logo svg{width:44px;height:33px}
+    .hero{min-height:auto;padding:104px 0 50px;background-position:72% center}
+    .hero::before{background:linear-gradient(180deg,rgba(52,80,61,.6) 0%,rgba(38,51,42,.88) 55%,rgba(38,51,42,.95))}
+    .pains,.calc,.get,.rhythm,.steps,.rqs,.plist,.pcard.wide .cols{grid-template-columns:1fr}
+    .get .ph{min-height:250px}
+    .cards{padding:14px}
+    .track{grid-template-columns:repeat(2,1fr)}
+    .trust .ph{position:relative;width:auto;height:280px;margin:-54px 0 24px}
+    .trust .ph::before{background:linear-gradient(0deg,var(--deep) 0%,rgba(63,90,71,0) 60%)}
+    .final{padding:34px 22px}
+    .final::before{background:linear-gradient(180deg,rgba(63,90,71,.9),rgba(52,80,61,.97))}
+    body{padding-bottom:80px}
+    .mbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:rgba(251,251,246,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+    .mbar .btn{flex:1;padding:15px 10px;box-shadow:none}
+    .mbar .wa{background:var(--sage);color:#fff}
+  }
+  @media (max-width:520px){ .seg.days button{flex:1 0 12%;min-width:0;padding:11px 0} details.acc summary em{display:none} }
+</style>
+</head>
+<body>
+
+<div class="proto">Прототип. Жёлтые метки — что прислать или решить. <button type="button" id="toggleTodo">Скрыть метки</button></div>
+
+<header>
+  <div class="bar-in">
+    <nav>
+      <a class="logo" href="#top"><svg viewBox="0 0 64 48" fill="none" aria-hidden="true"><path d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#6B8E73"/></svg><b><span>ритм</span>порядка</b></a>
+      <div class="links"><a href="#price">Калькулятор</a><a href="#prices">Прайс</a><a href="#get">Что входит</a><a href="#trust">Обо мне</a><a href="#faq">Вопросы</a></div>
+      <a class="btn sm wa-link" href="#" target="_blank" rel="noopener">Написать в WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1. ГЕРОЙ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-in">
+        <blockquote class="quote-hook">«Заказываю еженедельную уборку… это так удобно!»<cite class="src">— из отзыва о клининге в Павлодаре, 2ГИС</cite></blockquote>
+        <h1>Уборка раз в неделю — без спешки, мороки и сюрпризов в цене</h1>
+        <ul>
+          <li>Абонемент от 20 000 ₸ в месяц — 4 уборки</li>
+          <li>Всегда один человек и ваш постоянный день</li>
+          <li>Фотоотчёт и гарантия переделки 24 часа</li>
+        </ul>
+        <a class="btn" href="#price">Рассчитать стоимость</a>
+        <div class="hint">Беру только 3 квартиры на постоянку</div>
+      </div>
+    </div>
+    <span class="hero-tag todo">❓ фото героя: img/hero.jpg</span>
+  </section>
+
+  <!-- 2. БОЛИ -->
+  <section id="pain">
+    <div class="wrap">
+      <h2>Что жители Павлодара пишут о клининге</h2>
+      <div class="pains">
+        <div class="pain"><q>…торопится и не успевает на другой заказ</q><cite class="src">отзыв, 2ГИС</cite><p><i class="chk"></i>У меня 3 квартиры — спешить некуда.</p></div>
+        <div class="pain"><q>До последнего цену даже не говорят</q><cite class="src">отзыв, 2ГИС</cite><p><i class="chk"></i>Цена — в калькуляторе ниже, доплат нет.</p></div>
+        <div class="pain"><q>Пол-дня морочили голову, потом потребовали предоплату</q><cite class="src">отзыв, 2ГИС</cite><p><i class="chk"></i>Одно сообщение — и постоянный день.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. КАЛЬКУЛЯТОР -->
+  <section id="price" class="dark">
+    <div class="wrap">
+      <h2>Сколько <span class="acc-t">стоит</span></h2>
+      <div class="calc">
+        <div class="panel">
+          <span class="lbl">Площадь квартиры</span>
+          <div class="seg" id="area">
+            <button type="button" data-v="35" aria-pressed="true">до 35 м²<small>1-комн.</small></button>
+            <button type="button" data-v="50" aria-pressed="false">до 50 м²<small>2-комн.</small></button>
+            <button type="button" data-v="70" aria-pressed="false">до 70 м²<small>3-комн.</small></button>
+            <button type="button" data-v="more" aria-pressed="false">больше<small>по фото</small></button>
+          </div>
+          <span class="lbl">Что нужно</span>
+          <div class="seg" id="mode">
+            <button type="button" data-v="sub" aria-pressed="true">Абонемент<small>раз в неделю</small></button>
+            <button type="button" data-v="once" aria-pressed="false">Разово<small>одна уборка</small></button>
+            <button type="button" data-v="kitchen" aria-pressed="false">Только кухня<small>от 5 000 ₸</small></button>
+          </div>
+          <span class="lbl">Удобный день</span>
+          <div class="seg days" id="day">
+            <button type="button" data-v="пн" aria-pressed="false">пн</button><button type="button" data-v="вт" aria-pressed="false">вт</button>
+            <button type="button" data-v="ср" aria-pressed="false">ср</button><button type="button" data-v="чт" aria-pressed="false">чт</button>
+            <button type="button" data-v="пт" aria-pressed="false">пт</button><button type="button" data-v="сб" aria-pressed="false">сб</button>
+            <button type="button" data-v="вс" aria-pressed="false">вс</button>
+          </div>
+          <span class="lbl">Время</span>
+          <div class="seg" id="time">
+            <button type="button" data-v="утром" aria-pressed="false">Утро<small>9–12</small></button>
+            <button type="button" data-v="днём" aria-pressed="false">День<small>12–16</small></button>
+            <button type="button" data-v="вечером" aria-pressed="false">Вечер<small>16–19</small></button>
+          </div>
+        </div>
+        <div class="price">
+          <div>
+            <div class="lab" id="pLabel">Абонемент на месяц</div>
+            <div class="old" id="pOld"></div>
+            <div class="big" id="pBig">20 000 ₸</div>
+            <div class="per" id="pPer"></div>
+          </div>
+          <div>
+            <a class="btn" id="pBtn" href="#" target="_blank" rel="noopener">Записаться в WhatsApp</a>
+            <div class="note">Откроется WhatsApp с готовым сообщением — останется отправить</div>
+          </div>
+        </div>
+      </div>
+      <p class="muted calc-foot">«Ценность» — 4 уборки по нижней цене клининга в Павлодаре (Kaspi, OLX, ноябрь 2026) плюс бонусы. Генеральная уборка, окна, холодильник и духовка внутри — <a href="#prices" style="color:inherit">в прайсе ниже</a>.</p>
+    </div>
+  </section>
+
+  <!-- 3б. ВЕСЬ ПРАЙС (строится из настроек в скрипте) -->
+  <section id="prices">
+    <div class="wrap">
+      <h2>Весь прайс</h2>
+      <div class="plist" id="plist"></div>
+      <p class="muted plist-foot">Средства и инвентарь — мои, они уже в цене. Квартира больше 70 м² или что-то нестандартное — пришлите фото, назову цену заранее.
+        <span class="todo">❓ цены генеральной и доп. услуг — мой черновик (≈ вдвое ниже рынка Павлодара, как и абонемент); подтвердить</span></p>
+    </div>
+  </section>
+
+  <!-- 4. ЧТО ВЫ ПОЛУЧАЕТЕ -->
+  <section id="get" class="whiteb">
+    <div class="wrap">
+      <h2>С абонементом вы получаете</h2>
+      <div class="get">
+        <div class="ph" data-need="img/work.jpg"></div>
+        <div class="cards">
+          <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+            <div><b>Фотоотчёт после каждой уборки</b><span>видите результат, даже когда вас нет дома</span></div></div>
+          <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="m9 9 1.5 1.5L14 7M9 15h6"/></svg></div>
+            <div><b>Чек-лист под вашу квартиру</b><span>полить цветы, сложить полотенца — помню всё</span></div></div>
+          <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M6 10h12M9 6v1.5M9 13v3"/></svg></div>
+            <div><b>Холодильник внутри — бесплатно</b><span>раз в месяц, отдельно стоит 3&nbsp;000&nbsp;₸</span></div></div>
+          <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V8M21 18v-5a3 3 0 0 0-3-3H10v8M3 14h18"/><circle cx="6.5" cy="11" r="1.6"/></svg></div>
+            <div><b>Смена постельного белья</b><span>по вашему желанию</span></div></div>
+        </div>
+      </div>
+
+      <div class="rhythm">
+        <div>
+          <h3>Ритм-карта <span class="acc-t">🔥</span></h3>
+          <p>Чем дольше у вас чисто подряд, тем больше подарков. Сколько осталось до следующего — пишу после каждой уборки.</p>
+          <div class="rnote">✨ А иногда вас ждёт маленький сюрприз. Какой — не скажу 🙂</div>
+        </div>
+        <ul class="track">
+          <li><b>4</b>Мою духовку внутри<small>4 недели подряд</small></li>
+          <li><b>8</b>Убираю балкон<small>8 недель</small></li>
+          <li><b>12</b>Мою окна в одной комнате<small>12 недель</small></li>
+          <li><b>24</b>Генеральная кухни<small>полгода</small></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4б. ДО / ПОСЛЕ -->
+  <section id="ba" class="greyb">
+    <div class="wrap">
+      <h2>Генеральная уборка: <span class="acc-t">до и после</span></h2>
+      <div class="ba">
+        <div class="ba-tabs" id="baTabs">
+          <button type="button" data-k="kitchen" aria-pressed="true">Кухня</button>
+          <button type="button" data-k="bath" aria-pressed="false">Ванная</button>
+          <button type="button" data-k="bed" aria-pressed="false">Спальня</button>
+          <button type="button" data-k="fridge" aria-pressed="false">Холодильник</button>
+          <button type="button" data-k="shower" aria-pressed="false">Душевая</button>
+          <button type="button" data-k="corridor" aria-pressed="false">Коридор</button>
+        </div>
+        <div class="cmp" id="cmp">
+          <img id="baAfter" alt="После уборки">
+          <div class="before" id="baBeforeBox"><img id="baBefore" alt="До уборки"></div>
+          <div class="line" id="baLine"></div><div class="knob" id="baKnob">⇆</div>
+          <span class="tag l">До</span><span class="tag r">После</span>
+          <input type="range" min="0" max="100" value="50" id="baRange" aria-label="Сравнить до и после">
+        </div>
+        <p class="muted ba-note">Двигайте ползунок. Без ремонта — только уборка: та же мебель, те же обои. Генеральная — отдельно от абонемента, цену скажу по фото.
+          <br><span class="todo">⚠️ сейчас здесь иллюстрации, сгенерированные ИИ, — заменить на её настоящие фото после первых уборок</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ДОВЕРИЕ -->
+  <section id="trust" class="dark trust">
+    <div class="ph" data-need="img/me.jpg — она сама"></div>
+    <div class="wrap">
+      <div class="trust-in">
+        <h2>К вам всегда приезжаю <span class="acc-t">я</span></h2>
+        <p class="muted" style="margin:0"><span class="todo">❓ Имя и 2–3 живых предложения о себе</span> Не бригада и не случайный человек: вы знаете, кто приходит к вам домой.</p>
+        <ul class="ticks">
+          <li><i class="chk"></i><div><b>Ничего не нужно делать</b><span>постоянный день, напоминание накануне, средства мои</span></div></li>
+          <li><i class="chk"></i><div><b>Не нужно быть дома</b><span>можно оставить ключи или впустить через соседей</span></div></li>
+          <li><i class="chk"></i><div><b>Цена заранее</b><span>фиксированная сумма за месяц, без доплат</span></div></li>
+        </ul>
+        <div class="guarantee">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3Z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+          <div><b class="acc-t">Гарантия 24 часа.</b> Что-то не так после уборки — напишите, приеду и переделаю бесплатно.</div>
+        </div>
+        <table class="vs">
+          <tr><th></th><th>Клининговая компания</th><th>Ритм порядка</th></tr>
+          <tr><td>Кто приходит</td><td>кого пришлют</td><td>всегда я</td></tr>
+          <tr><td>Как убирают</td><td>общий регламент</td><td>ваш чек-лист</td></tr>
+          <tr><td>Внимание</td><td>поток клиентов</td><td>только 3 квартиры</td></tr>
+        </table>
+        <p class="muted rq-note">Что люди ценят в регулярной уборке — из отзывов о клининге в Павлодаре (не обо мне):</p>
+        <div class="rqs">
+          <div class="rq"><q>Очень приятный и ответственный человек, а это редкость в наше время</q></div>
+          <div class="rq"><q>Услуги клининга казались прихотью, но… я была потрясена</q></div>
+        </div>
+        <p class="muted rq-note">Отзывы моих клиентов: <span class="todo">❓ после первых 3 клиентов — только настоящие, с разрешения</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. ЧТО ВХОДИТ -->
+  <section id="what">
+    <div class="wrap narrow">
+      <h2>Что входит в уборку</h2>
+      <details class="acc"><summary>Комнаты <em>пыль, подоконники, мусор</em></summary>
+        <ul><li>Пыль с доступных поверхностей</li><li>Подоконники</li><li>Столы, полки, тумбы</li><li>Ручки и выключатели</li><li>Видимый мусор</li></ul></details>
+      <details class="acc"><summary>Кухня <em>столешница, раковина, плита</em></summary>
+        <ul><li>Стол и столешница</li><li>Раковина и смеситель</li><li>Плита и техника снаружи</li><li>Фасады шкафов</li></ul></details>
+      <details class="acc"><summary>Ванная и туалет <em>сантехника, зеркала</em></summary>
+        <ul><li>Раковина и смеситель</li><li>Унитаз</li><li>Ванна или душевая</li><li>Зеркала</li><li>Стиральная машина снаружи</li></ul></details>
+      <details class="acc"><summary>Полы <em>пылесос, влажная уборка</em></summary>
+        <ul><li>Пылесос во всех комнатах</li><li>Влажная уборка</li><li>Углы и плинтусы от пыли</li><li>Вынос мусора</li></ul></details>
+      <details class="acc no"><summary>Не входит в абонемент <em>окна, генеральная…</em></summary>
+        <ul><li>Окна и балконы</li><li>Холодильник и духовка внутри (кроме бонусов)</li><li>Разбор шкафов</li><li>Стены и потолки</li><li>Застарелый жир и налёт</li><li>Генеральная уборка</li></ul></details>
+    </div>
+  </section>
+
+  <!-- 7. КАК ЗАПИСАТЬСЯ -->
+  <section class="whiteb">
+    <div class="wrap">
+      <h2>Как записаться</h2>
+      <div class="steps">
+        <div class="step"><i>01</i><b>Напишите в WhatsApp</b><span>площадь, район и удобный день</span></div>
+        <div class="step"><i>02</i><b>Договоримся</b><span>постоянный день и ваш чек-лист. Первая уборка — за 2 дня</span></div>
+        <div class="step"><i>03</i><b>Приезжаю и убираю</b><span>оплата <span class="todo">❓ Kaspi / наличные, когда</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ВОПРОСЫ -->
+  <section id="faq" class="greyb">
+    <div class="wrap narrow">
+      <h2>Частые вопросы и сомнения</h2>
+      <details class="acc"><summary>«Клининг — это прихоть, я и сама могу»</summary><p>Можете. Вопрос — сколько это стоит вашего времени: около 16 часов в месяц. Абонемент — это ~1 250 ₸ за каждый свободный час.</p></details>
+      <details class="acc"><summary>«Уберут наспех и уйдут»</summary><p>У меня всего 3 квартиры, никакого «следующего заказа» в спину. Плюс фотоотчёт и гарантия: что-то не так — переделаю бесплатно в течение 24 часов.</p></details>
+      <details class="acc"><summary>«На месте окажется дороже»</summary><p>Цена фиксированная за месяц и известна до первой уборки. Доплат на месте нет. Доп. услуги — только если вы попросите, и цену скажу заранее.</p></details>
+      <details class="acc"><summary>«Возьмут предоплату и пропадут»</summary><p><span class="todo">❓ решить: оплата после первой уборки или за месяц вперёд; что при отмене</span></p></details>
+      <details class="acc"><summary>«Страшно пускать чужого и оставлять ключи»</summary><p>К вам всегда приходит один и тот же человек — я. На первой уборке можно быть дома и познакомиться. Дальше — как удобно: ключи, соседи или при вас.</p></details>
+      <details class="acc"><summary>Чьи средства для уборки?</summary><p>Мои, они уже в цене. Есть любимые средства — скажите, буду убирать ими.</p></details>
+      <details class="acc"><summary>Чем абонемент лучше разовой уборки?</summary><p>Постоянный день без договорённостей, фотоотчёт, чек-лист, бесплатный холодильник раз в месяц и подарки Ритм-карты.</p></details>
+      <details class="acc"><summary>Можно перенести уборку?</summary><p><span class="todo">❓ за сколько предупредить и что с оплатой</span></p></details>
+      <details class="acc"><summary>В каких районах работаете?</summary><p><span class="todo">❓ районы и доплата за дальние</span></p></details>
+      <details class="acc"><summary>У меня домашние животные</summary><p><span class="todo">❓ ответ</span></p></details>
+    </div>
+  </section>
+
+  <!-- 9. ФИНАЛ -->
+  <section>
+    <div class="wrap">
+      <div class="final">
+        <h2>Беру только <span class="acc-t">3 квартиры</span> на постоянку</h2>
+        <p>Убираю сама, поэтому на каждую квартиру должно хватать времени и внимания.</p>
+        <div class="seats" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p style="margin:0 0 6px;font-size:15px">Свободно мест: 3 из 3</p>
+        <div class="deadline">Запись на декабрь — до 30 ноября</div>
+        <a class="btn wa-link" href="#" target="_blank" rel="noopener">Занять место</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="logo"><svg viewBox="0 0 64 48" fill="none" aria-hidden="true"><path d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#A4B59A"/></svg><b><span>ритм</span>порядка</b></div>уборка квартир · Павлодар<br><span class="todo">❓ номер WhatsApp и ник Instagram</span></footer>
+
+<div class="mbar">
+  <a class="btn" href="#price">Рассчитать</a>
+  <a class="btn wa wa-link" href="#" target="_blank" rel="noopener">WhatsApp</a>
+</div>
+
+<script>
+  // ===== НАСТРОЙКИ — менять здесь (и те же цены в crm.html) =====
+  const PHONE = "7XXXXXXXXXX";                         // номер WhatsApp без +, пробелов и скобок
+  const SUB  = { "35": 20000, "50": 24000, "70": 28000 }; // абонемент за месяц (4 уборки)
+  const ONCE = { "35": 5000,  "50": 6000,  "70": 7000  }; // разовая уборка
+  const KITCHEN = 5000;                                // только кухня, «от»
+  const HOURS_SAVED = 16;                              // сколько часов в месяц клиент тратит на уборку сам (оценка)
+  const MARKET_VISIT = { "35": 10000, "50": 12000, "70": 15000 }; // рынок Павлодара за визит (Kaspi/OLX, ноябрь 2026) — для якоря
+  const VALUE_EXTRA = 6000;                            // холодильник 3 000 + подарок Ритм-карты (духовка 3 000) — по прайсу ниже
+  // ==============================================================
+
+  const fmt = n => n.toLocaleString("ru-RU").replace(/,/g, " ").replace(/\s/g, " ") + " ₸";
+  const st = { area: "35", mode: "sub", day: "", time: "" };
+  const waUrl = t => "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(t);
+
+  function render(){
+    const big = document.getElementById("pBig"), per = document.getElementById("pPer"), lbl = document.getElementById("pLabel");
+    const old = document.getElementById("pOld");
+    old.textContent = (st.mode === "sub" && st.area !== "more")
+      ? "ценность по ценам Павлодара от " + fmt(MARKET_VISIT[st.area] * 4 + VALUE_EXTRA) : "";
+    const areaTxt = st.area === "more" ? "больше 70 м²" : "до " + st.area + " м²";
+    const when = [st.day && ("день: " + st.day), st.time].filter(Boolean).join(", ");
+    let what;
+    if (st.mode === "kitchen"){
+      lbl.textContent = "Уборка кухни"; big.textContent = "от " + fmt(KITCHEN);
+      per.innerHTML = "точная цена — по фото кухни"; what = "уборка кухни";
+    } else if (st.area === "more"){
+      lbl.textContent = st.mode === "sub" ? "Абонемент на месяц" : "Разовая уборка"; big.textContent = "по фото";
+      per.innerHTML = "пришлите фото комнат — посчитаю заранее";
+      what = (st.mode === "sub" ? "абонемент (4 уборки в месяц)" : "разовая уборка") + ", квартира больше 70 м²";
+    } else if (st.mode === "sub"){
+      const m = SUB[st.area];
+      lbl.textContent = "Абонемент на месяц"; big.textContent = fmt(m);
+      per.innerHTML = "4 уборки · " + fmt(m / 4) + " за визит" +
+        "<ul><li>фотоотчёт после каждой уборки</li><li>холодильник внутри раз в месяц бесплатно</li><li>подарки Ритм-карты</li><li>гарантия 24 часа</li></ul>" +
+        "<div class='hourline'>Это ~" + fmt(Math.round(m / HOURS_SAVED / 50) * 50) + " за каждый свободный час: " + HOURS_SAVED + " часов в месяц вы не тратите на уборку</div>";
+      what = "абонемент, квартира " + areaTxt + ", 4 уборки в месяц за " + fmt(m);
+    } else {
+      lbl.textContent = "Разовая уборка"; big.textContent = fmt(ONCE[st.area]);
+      per.innerHTML = "одна поддерживающая уборка"; what = "разовая уборка, квартира " + areaTxt;
+    }
+    const msg = "Здравствуйте! Хочу записаться: " + what + (when ? ". Удобно — " + when : "") + ". Мой район: ";
+    document.getElementById("pBtn").href = waUrl(msg);
+  }
+
+  function seg(id, key, toggleable){
+    document.getElementById(id).addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      const same = st[key] === b.dataset.v;
+      st[key] = toggleable && same ? "" : b.dataset.v;
+      [...e.currentTarget.children].forEach(x => x.setAttribute("aria-pressed", x.dataset.v === st[key]));
+      render();
+    });
+  }
+  seg("area", "area"); seg("mode", "mode"); seg("day", "day", true); seg("time", "time", true);
+
+  document.querySelectorAll(".wa-link").forEach(a => a.href = waUrl("Здравствуйте! Хочу узнать про уборку квартиры. Мой район: "));
+  render();
+
+  // ===== ПРАЙС: генеральная и доп. услуги (черновик — подтвердить) =====
+  const GENERAL = { "35": 12000, "50": 15000, "70": 18000 };
+  const EXTRAS = [
+    ["Холодильник внутри", 3000], ["Духовка внутри", 3000], ["Микроволновка внутри", 1500],
+    ["Кухонные шкафы внутри", 3000], ["Окно — одна створка", 1000], ["Балкон или лоджия", 4000],
+    ["Глажка — 1 час", 2000], ["Уборка после ремонта", "от 20 000 ₸"]
+  ];
+  const AREAS = { "35": "до 35 м² · 1-комн.", "50": "до 50 м² · 2-комн.", "70": "до 70 м² · 3-комн." };
+  const row = (a, b) => `<div class="prow"><span>${a}</span><b>${typeof b === "number" ? fmt(b) : b}</b></div>`;
+  const byArea = o => Object.keys(AREAS).map(k => row(AREAS[k], o[k])).join("");
+  const half = EXTRAS.length / 2;
+  document.getElementById("plist").innerHTML =
+    `<div class="pcard hl"><h3>Абонемент <i>ВЫГОДНО</i></h3><p class="sub">4 уборки в месяц, раз в неделю · бонусы и Ритм-карта</p>${byArea(SUB)}</div>` +
+    `<div class="pcard"><h3>Разовая уборка</h3><p class="sub">поддерживающая: пыль, полы, кухня, санузел</p>${byArea(ONCE)}${row("Только кухня", "от " + fmt(KITCHEN))}</div>` +
+    `<div class="pcard"><h3>Генеральная уборка</h3><p class="sub">всё из разовой + отмыть застарелое, двери, плинтусы, светильники</p>${byArea(GENERAL)}${row("Больше 70 м²", "по фото")}</div>` +
+    `<div class="pcard wide"><h3>Доп. услуги</h3><p class="sub">к любой уборке — скажите заранее, время добавлю</p><div class="cols"><div>${EXTRAS.slice(0, half).map(e => row(...e)).join("")}</div><div>${EXTRAS.slice(half).map(e => row(...e)).join("")}</div></div></div>`;
+
+  // ===== ДО/ПОСЛЕ: пары — два файла (ползунок) или одна склеенная картинка =====
+  const BA = {
+    kitchen:  ["img/gpt/ritm-kitchen-before.jpg", "img/gpt/ritm-kitchen-after.jpg"],
+    bath:     ["img/gpt/ritm-bath-a.jpg", "img/gpt/ritm-bath-b.jpg"],
+    bed:      ["img/gpt/ritm-bed-a.jpg", "img/gpt/ritm-bed-b.jpg"],
+    fridge:   ["img/gpt/ritm-fridge.jpg"],
+    shower:   ["img/gpt/ritm-shower-a.jpg"],
+    corridor: ["img/gpt/ritm-corridor.jpg"]
+  };
+  const cmp = document.getElementById("cmp"), baRange = document.getElementById("baRange");
+  function baPos(v){
+    document.getElementById("baBeforeBox").style.width = v + "%";
+    document.getElementById("baLine").style.left = v + "%";
+    document.getElementById("baKnob").style.left = v + "%";
+  }
+  function baSize(){ document.getElementById("baBefore").style.width = cmp.clientWidth + "px"; }
+  function baShow(k){
+    const [a, b] = BA[k], pair = !!b;
+    document.getElementById("baAfter").src = pair ? b : a;
+    document.getElementById("baBefore").src = pair ? a : "";
+    cmp.querySelectorAll(".before,.line,.knob,.tag,input").forEach(el => el.style.display = pair ? "" : "none");
+    baRange.value = 50; baPos(50); baSize();
+  }
+  baRange.addEventListener("input", e => baPos(e.target.value));
+  window.addEventListener("resize", baSize);
+  document.getElementById("baTabs").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    [...e.currentTarget.children].forEach(x => x.setAttribute("aria-pressed", x === b));
+    baShow(b.dataset.k);
+  });
+  baShow("kitchen");
+
+  // фото-слоты: если картинка уже лежит в img/ — убрать метку «фото: …»
+  document.querySelectorAll(".ph[data-need]").forEach(el => {
+    const m = getComputedStyle(el).backgroundImage.match(/url\("?(.+?)"?\)/);
+    if (!m) return; const im = new Image(); im.onload = () => el.removeAttribute("data-need"); im.src = m[1];
+  });
+  { const im = new Image(); im.onload = () => document.querySelector(".hero-tag")?.remove(); im.src = "img/hero.jpg"; }
+
+  document.getElementById("toggleTodo").addEventListener("click", e => {
+    const on = document.body.classList.toggle("clean");
+    e.target.textContent = on ? "Показать метки" : "Скрыть метки";
+  });
+</script>
+</body>
+</html>
