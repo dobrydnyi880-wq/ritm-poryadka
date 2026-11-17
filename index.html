@@ -114,7 +114,7 @@
   .calc-foot{font-size:13.5px;margin:16px 2px 0;text-align:center}
 
   /* ===== ВЕСЬ ПРАЙС ===== */
-  .plist{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .plist{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .pcard{background:var(--card);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
   .pcard h3{display:flex;align-items:center;gap:10px;margin-bottom:4px}
   .pcard h3 i{font-style:normal;font-size:11.5px;font-weight:700;background:var(--light);color:var(--deep);border-radius:99px;padding:3px 9px;letter-spacing:.02em}
@@ -346,7 +346,7 @@
           </div>
         </div>
       </div>
-      <p class="muted calc-foot">«Ценность» — 4 уборки по нижней цене клининга в Павлодаре (Kaspi, OLX, ноябрь 2026) плюс бонусы. Генеральная уборка, окна, холодильник и духовка внутри — <a href="#prices" style="color:inherit">в прайсе ниже</a>.</p>
+      <p class="muted calc-foot">«Ценность» — 4 уборки по нижней цене клининга в Павлодаре (Kaspi, OLX, ноябрь 2026) плюс бонусы. Окна, холодильник и духовка внутри — <a href="#prices" style="color:inherit">в прайсе ниже</a>.</p>
     </div>
   </section>
 
@@ -356,7 +356,7 @@
       <h2>Весь прайс</h2>
       <div class="plist" id="plist"></div>
       <p class="muted plist-foot">Средства и инвентарь — мои, они уже в цене. Квартира больше 70 м² или что-то нестандартное — пришлите фото, назову цену заранее.
-        <span class="todo">❓ цены генеральной и доп. услуг — мой черновик (≈ вдвое ниже рынка Павлодара, как и абонемент); подтвердить</span></p>
+        <span class="todo">❓ цены доп. услуг — мой черновик (≈ вдвое ниже рынка Павлодара, как и абонемент); подтвердить</span></p>
     </div>
   </section>
 
@@ -523,8 +523,8 @@
 <script>
   // ===== НАСТРОЙКИ — менять здесь (и те же цены в crm.html) =====
   const PHONE = "7XXXXXXXXXX";                         // номер WhatsApp без +, пробелов и скобок
-  const SUB  = { "35": 20000, "50": 24000, "70": 28000 }; // абонемент за месяц (4 уборки)
-  const ONCE = { "35": 5000,  "50": 6000,  "70": 7000  }; // разовая уборка
+  const SUB  = { "35": 20000, "50": 28000, "70": 30000 }; // абонемент за месяц (4 уборки)
+  const ONCE = { "35": 6000,  "50": 8000,  "70": 12000 }; // разовая уборка
   const KITCHEN = 5000;                                // только кухня, «от»
   const HOURS_SAVED = 16;                              // сколько часов в месяц клиент тратит на уборку сам (оценка)
   const MARKET_VISIT = { "35": 10000, "50": 12000, "70": 15000 }; // рынок Павлодара за визит (Kaspi/OLX, ноябрь 2026) — для якоря
@@ -579,12 +579,11 @@
   document.querySelectorAll(".wa-link").forEach(a => a.href = waUrl("Здравствуйте! Хочу узнать про уборку квартиры. Мой район: "));
   render();
 
-  // ===== ПРАЙС: генеральная и доп. услуги (черновик — подтвердить) =====
-  const GENERAL = { "35": 12000, "50": 15000, "70": 18000 };
+  // ===== ПРАЙС: доп. услуги (черновик — подтвердить) =====
   const EXTRAS = [
     ["Холодильник внутри", 3000], ["Духовка внутри", 3000], ["Микроволновка внутри", 1500],
     ["Кухонные шкафы внутри", 3000], ["Окно — одна створка", 1000], ["Балкон или лоджия", 4000],
-    ["Глажка — 1 час", 2000], ["Уборка после ремонта", "от 20 000 ₸"]
+    ["Глажка белья — 1 час", 2000], ["Уборка после ремонта", "от 20 000 ₸"]
   ];
   const AREAS = { "35": "до 35 м² · 1-комн.", "50": "до 50 м² · 2-комн.", "70": "до 70 м² · 3-комн." };
   const row = (a, b) => `<div class="prow"><span>${a}</span><b>${typeof b === "number" ? fmt(b) : b}</b></div>`;
@@ -593,8 +592,7 @@
   document.getElementById("plist").innerHTML =
     `<div class="pcard hl"><h3>Абонемент <i>ВЫГОДНО</i></h3><p class="sub">4 уборки в месяц, раз в неделю · бонусы и Ритм-карта</p>${byArea(SUB)}</div>` +
     `<div class="pcard"><h3>Разовая уборка</h3><p class="sub">поддерживающая: пыль, полы, кухня, санузел</p>${byArea(ONCE)}${row("Только кухня", "от " + fmt(KITCHEN))}</div>` +
-    `<div class="pcard"><h3>Генеральная уборка</h3><p class="sub">всё из разовой + отмыть застарелое, двери, плинтусы, светильники</p>${byArea(GENERAL)}${row("Больше 70 м²", "по фото")}</div>` +
-    `<div class="pcard wide"><h3>Доп. услуги</h3><p class="sub">к любой уборке — скажите заранее, время добавлю</p><div class="cols"><div>${EXTRAS.slice(0, half).map(e => row(...e)).join("")}</div><div>${EXTRAS.slice(half).map(e => row(...e)).join("")}</div></div></div>`;
+    `<div class="pcard wide"><h3>Доп. услуги</h3><p class="sub">к любой уборке, доп. услуги согласуются заранее</p><div class="cols"><div>${EXTRAS.slice(0, half).map(e => row(...e)).join("")}</div><div>${EXTRAS.slice(half).map(e => row(...e)).join("")}</div></div></div>`;
 
   // ===== ДО/ПОСЛЕ: пары — два файла (ползунок) или одна склеенная картинка =====
   const BA = {
