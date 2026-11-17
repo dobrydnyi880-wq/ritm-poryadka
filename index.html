@@ -64,8 +64,9 @@
 
   /* ===== 1. ГЕРОЙ ===== */
   .hero{position:relative;min-height:min(760px,100svh);display:flex;align-items:center;padding:130px 0 76px;color:#fff;
-    background:var(--deep) url(img/hero.jpg) 70% center/cover no-repeat}
-  .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(38,51,42,.94) 0%,rgba(52,80,61,.78) 45%,rgba(63,90,71,.15) 85%)}
+    background:var(--deep);isolation:isolate;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:-2;background:url(img/hero.jpg) 70% center/cover no-repeat}
+  .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(38,51,42,.94) 0%,rgba(52,80,61,.78) 45%,rgba(63,90,71,.15) 85%)}
   .hero .wrap{position:relative;width:100%}
   .hero-in{max-width:570px}
   .hero h1{color:#fff}
@@ -235,7 +236,8 @@
     header nav{height:58px;padding-left:14px}
     header{margin-bottom:-68px}
     .logo svg{width:44px;height:33px}
-    .hero{min-height:auto;padding:104px 0 50px;background-position:72% center}
+    .hero{min-height:auto;padding:104px 0 50px}
+    .hero-bg{background-position:72% center}
     .hero::before{background:linear-gradient(180deg,rgba(52,80,61,.6) 0%,rgba(38,51,42,.88) 55%,rgba(38,51,42,.95))}
     .pains,.calc,.get,.rhythm,.steps,.rqs,.plist,.pcard.wide .cols{grid-template-columns:1fr}
     .get .ph{min-height:250px}
@@ -252,6 +254,60 @@
     .mbar .wa{background:var(--sage);color:#fff}
   }
   @media (max-width:520px){ .seg.days button{flex:1 0 12%;min-width:0;padding:11px 0} details.acc summary em{display:none} }
+
+  /* ===== ДВИЖЕНИЕ — только если в системе не выключена анимация ===== */
+  @media (prefers-reduced-motion: no-preference){
+    /* герой: медленный наезд на фото + текст выплывает по строкам */
+    .hero-bg{animation:kb 16s cubic-bezier(.2,.6,.2,1) both}
+    @keyframes kb{from{transform:scale(1.14)}to{transform:scale(1)}}
+    .hero h1,.hero li,.hero .btn,.hero .hint{animation:up .9s cubic-bezier(.2,.7,.2,1) both}
+    .hero h1{animation-delay:.15s} .hero li:nth-child(1){animation-delay:.45s} .hero li:nth-child(2){animation-delay:.58s}
+    .hero li:nth-child(3){animation-delay:.71s} .hero .btn{animation-delay:.9s} .hero .hint{animation-delay:1.05s}
+    @keyframes up{from{opacity:0;transform:translateY(20px)}}
+
+    /* логотип: линия ритма рисуется, искра вспыхивает и потом изредка мерцает */
+    .logo svg path:first-child{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.5s .2s cubic-bezier(.6,0,.3,1) forwards}
+    .logo svg path:last-child{transform-box:fill-box;transform-origin:center;animation:spark .6s 1.5s both,twinkle 5s 3s ease-in-out infinite}
+    @keyframes draw{to{stroke-dashoffset:0}}
+    @keyframes spark{from{opacity:0;transform:scale(0) rotate(-90deg)}}
+    @keyframes twinkle{0%,88%,100%{transform:scale(1)}94%{transform:scale(1.5) rotate(45deg)}}
+
+    /* блоки плавно появляются при прокрутке (класс .rv ставит скрипт) */
+    .rv{opacity:0;transform:translateY(26px);transition:opacity .75s cubic-bezier(.2,.7,.2,1) var(--d,0ms),transform .75s cubic-bezier(.2,.7,.2,1) var(--d,0ms)}
+    .rv.in{opacity:1;transform:none}
+
+    /* главные кнопки: блик пробегает раз в несколько секунд */
+    .hero .btn,.final .btn,#pBtn{position:relative;overflow:hidden}
+    .hero .btn::after,.final .btn::after,#pBtn::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;
+      background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 5s 2s ease-in-out infinite}
+    @keyframes shine{0%,70%{left:-60%}100%{left:130%}}
+    .btn:active{transform:scale(.97)}
+
+    /* цена в калькуляторе «подпрыгивает» при смене */
+    .price .big.bump{animation:bump .45s cubic-bezier(.3,1.6,.5,1)}
+    @keyframes bump{40%{transform:scale(1.06)}}
+    .seg button[aria-pressed="true"]{animation:press .3s ease}
+    @keyframes press{50%{transform:scale(.95)}}
+
+    /* до/после: кружок ползунка «дышит», пока его не тронули */
+    .cmp:not(.touched) .knob{animation:ring 2s ease-out infinite}
+    @keyframes ring{0%{box-shadow:0 4px 14px rgba(0,0,0,.25),0 0 0 0 rgba(230,233,221,.7)}100%{box-shadow:0 4px 14px rgba(0,0,0,.25),0 0 0 18px rgba(230,233,221,0)}}
+    #baAfter{transition:opacity .35s} .cmp.swap #baAfter,.cmp.swap .before{opacity:0}
+
+    /* раскрытие вопросов */
+    details.acc[open] > :not(summary){animation:open .4s ease both}
+    @keyframes open{from{opacity:0;transform:translateY(-6px)}}
+    details.acc{transition:box-shadow .2s} details.acc:hover{box-shadow:0 6px 20px rgba(63,90,71,.12)}
+
+    /* карточки слегка приподнимаются под курсором */
+    .pcard,.step,.fcard{transition:transform .25s,box-shadow .25s}
+    @media (hover:hover){.pcard:hover,.step:hover,.fcard:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(63,90,71,.16)}}
+
+    /* три свободных места появляются по одному */
+    .final.in .seats i{animation:seat .5s cubic-bezier(.3,1.6,.5,1) both}
+    .final.in .seats i:nth-child(2){animation-delay:.15s} .final.in .seats i:nth-child(3){animation-delay:.3s}
+    @keyframes seat{from{transform:scale(0);opacity:0}}
+  }
 </style>
 </head>
 <body>
@@ -261,7 +317,7 @@
 <header>
   <div class="bar-in">
     <nav>
-      <a class="logo" href="#top"><svg viewBox="0 0 64 48" fill="none" aria-hidden="true"><path d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#6B8E73"/></svg><b><span>ритм</span>порядка</b></a>
+      <a class="logo" href="#top"><svg viewBox="0 0 64 48" fill="none" aria-hidden="true"><path pathLength="1" d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#6B8E73"/></svg><b><span>ритм</span>порядка</b></a>
       <div class="links"><a href="#price">Калькулятор</a><a href="#prices">Прайс</a><a href="#get">Что входит</a><a href="#trust">Обо мне</a><a href="#faq">Вопросы</a></div>
       <a class="btn sm wa-link" href="#" target="_blank" rel="noopener">Написать в WhatsApp</a>
     </nav>
@@ -272,6 +328,7 @@
 
   <!-- 1. ГЕРОЙ -->
   <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="wrap">
       <div class="hero-in">
         <h1>Уборка раз в неделю — без спешки, мороки и сюрпризов в цене</h1>
@@ -497,7 +554,7 @@
   </section>
 </main>
 
-<footer><div class="logo"><svg viewBox="0 0 64 48" fill="none" aria-hidden="true"><path d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#A4B59A"/></svg><b><span>ритм</span>порядка</b></div>уборка квартир · Павлодар<br><span class="todo">❓ номер WhatsApp и ник Instagram</span></footer>
+<footer><div class="logo"><svg viewBox="0 0 64 48" fill="none" aria-hidden="true"><path pathLength="1" d="M3 38H11.5L15 31l4 12 3-5H25V24.5L36 14.5l11 10V38h14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 24.5l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z" fill="#A4B59A"/></svg><b><span>ритм</span>порядка</b></div>уборка квартир · Павлодар<br><span class="todo">❓ номер WhatsApp и ник Instagram</span></footer>
 
 <div class="mbar">
   <a class="btn" href="#price">Рассчитать</a>
@@ -518,6 +575,22 @@
   const fmt = n => n.toLocaleString("ru-RU").replace(/,/g, " ").replace(/\s/g, " ") + " ₸";
   const st = { area: "35", mode: "sub", day: "", time: "" };
   const waUrl = t => "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(t);
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches; // анимацию выключили в системе — не двигаем ничего
+
+  // цена в калькуляторе не прыгает, а «перещёлкивается» к новому числу
+  function countTo(el, to){
+    const from = el._v || 0; el._v = to;
+    cancelAnimationFrame(el._raf);
+    if (calm || !from || from === to){ el.textContent = fmt(to); return; }
+    const t0 = performance.now(), dur = 500;
+    const step = t => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(Math.round((from + (to - from) * e) / 100) * 100);
+      if (k < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+    el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+  }
 
   function render(){
     const big = document.getElementById("pBig"), per = document.getElementById("pPer"), lbl = document.getElementById("pLabel");
@@ -528,21 +601,21 @@
     const when = [st.day && ("день: " + st.day), st.time].filter(Boolean).join(", ");
     let what;
     if (st.mode === "kitchen"){
-      lbl.textContent = "Уборка кухни"; big.textContent = "от " + fmt(KITCHEN);
+      lbl.textContent = "Уборка кухни"; big.textContent = "от " + fmt(KITCHEN); big._v = 0;
       per.innerHTML = "точная цена — по фото кухни"; what = "уборка кухни";
     } else if (st.area === "more"){
-      lbl.textContent = st.mode === "sub" ? "Абонемент на месяц" : "Разовая уборка"; big.textContent = "по фото";
+      lbl.textContent = st.mode === "sub" ? "Абонемент на месяц" : "Разовая уборка"; big.textContent = "по фото"; big._v = 0;
       per.innerHTML = "пришлите фото комнат — посчитаю заранее";
       what = (st.mode === "sub" ? "абонемент (4 уборки в месяц)" : "разовая уборка") + ", квартира больше 70 м²";
     } else if (st.mode === "sub"){
       const m = SUB[st.area];
-      lbl.textContent = "Абонемент на месяц"; big.textContent = fmt(m);
+      lbl.textContent = "Абонемент на месяц"; countTo(big, m);
       per.innerHTML = "4 уборки · " + fmt(m / 4) + " за визит" +
         "<ul><li>фотоотчёт после каждой уборки</li><li>холодильник внутри раз в месяц бесплатно</li><li>подарки Ритм-карты</li><li>гарантия 24 часа</li></ul>" +
         "<div class='hourline'>Это ~" + fmt(Math.round(m / HOURS_SAVED / 50) * 50) + " за каждый свободный час: " + HOURS_SAVED + " часов в месяц вы не тратите на уборку</div>";
       what = "абонемент, квартира " + areaTxt + ", 4 уборки в месяц за " + fmt(m);
     } else {
-      lbl.textContent = "Разовая уборка"; big.textContent = fmt(ONCE[st.area]);
+      lbl.textContent = "Разовая уборка"; countTo(big, ONCE[st.area]);
       per.innerHTML = "одна поддерживающая уборка"; what = "разовая уборка, квартира " + areaTxt;
     }
     const msg = "Здравствуйте! Хочу записаться: " + what + (when ? ". Удобно — " + when : "") + ". Мой район: ";
@@ -621,6 +694,46 @@
     const on = document.body.classList.toggle("clean");
     e.target.textContent = on ? "Показать метки" : "Скрыть метки";
   });
+
+  // ===== ДВИЖЕНИЕ =====
+  // ползунок «до/после» один раз сам показывает, что его можно тянуть
+  let baTouched = false;
+  const baStop = () => { baTouched = true; cmp.classList.add("touched"); };
+  baRange.addEventListener("pointerdown", baStop); baRange.addEventListener("touchstart", baStop, {passive: true});
+  function baHint(){
+    if (calm || baTouched || baRange.style.display === "none") return;
+    const keys = [[0, 50], [500, 28], [1200, 72], [1800, 50]], t0 = performance.now();
+    const step = t => {
+      if (baTouched) return;
+      const dt = t - t0; let i = 0; while (i < keys.length - 2 && dt > keys[i + 1][0]) i++;
+      const [ta, va] = keys[i], [tb, vb] = keys[i + 1], k = Math.min(1, (dt - ta) / (tb - ta)), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      const v = va + (vb - va) * e; baRange.value = v; baPos(v);
+      if (dt < keys[keys.length - 1][0]) requestAnimationFrame(step); else { baRange.value = 50; baPos(50); }
+    };
+    requestAnimationFrame(step);
+  }
+  document.getElementById("baTabs").addEventListener("click", e => {
+    if (calm || !e.target.closest("button")) return;
+    cmp.classList.add("swap");
+    document.getElementById("baAfter").decode().catch(() => {}).then(() => { cmp.classList.remove("swap"); setTimeout(baHint, 250); });
+  });
+
+  // блоки появляются при прокрутке, соседние — с небольшой задержкой друг за другом
+  if (!calm && "IntersectionObserver" in window){
+    const SEL = "section h2, #what details.acc, .calc .panel, .calc .price, .pcard, .plist-foot, .fcard, .get .ph, .rhythm, .track li, .ba-tabs, .ba, .trust-in > *, .step, #faq details.acc, .final";
+    const els = [...document.querySelectorAll(SEL)];
+    els.forEach(el => {
+      const sib = [...el.parentElement.children].filter(x => x.matches(SEL));
+      el.style.setProperty("--d", Math.min(sib.indexOf(el), 6) * 90 + "ms");
+      el.classList.add("rv");
+    });
+    const io = new IntersectionObserver(es => es.forEach(en => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add("in"); io.unobserve(en.target);
+      if (en.target.classList.contains("ba")) setTimeout(baHint, 700);
+    }), {rootMargin: "0px 0px -8% 0px", threshold: .12});
+    els.forEach(el => io.observe(el));
+  }
 </script>
 </body>
 </html>
